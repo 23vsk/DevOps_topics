@@ -1,0 +1,96 @@
+top - ##Used to check the cpu utilization
+df -h ##Used to check disk space utilization
+free -m ##Used to check for memory
+
+sudo su - ##Super user do switch user to root user and takes to the root directory
+sudo su ##Super user do switch user to root user and takes to the same directory
+su ec2-user  ##Switch root user to any other user
+whoami ##It will display the user
+yum update -y ##Use to update softwares, -y is used to give 'yes' during runtime
+yum install packagename -y ##Use to install softwares
+yum remove packagename -y ##Use to uninstall softwares
+yum list installed ##Use to list softwares
+pwd ##present or print working directory
+cat > file1 ##It will create file and give content, to save and exit from file ctrl+d. If we re-run the command it will overwite the file
+cat >> file1 ##It will add data to the file
+cat file1 ##To read the cotent of file
+echo "content" > filename ##It will create a file and store the echo value and overwrite the file. > means redirecting
+echo "content" >> filename ##It will create a file and store the echo value and append the file.
+ls -lart ##Displays list the files and flag -l=long list, -a=all files will be shown including hidden files, -r=reverse order, -t=sort by modification time with most recent
+touch file2 ##It will create empty file
+touch file{1..10} ##Used to create multiple files
+nano file3 ##It will create file and give content. To save and exit from editing type cntrl+x. It will not overwrite content of the file
+vi file4 ##It will create file and press i give content. To save and exit from editing press esc and type :wq! hit enter and without saving file :q! hit enter
+mkdir dir1 ##To create directory
+cat > .testhidden ##Used to create hidden file. Prefix as . to create hidden file or directory
+mkdir .testhiddendir ##Used to create hidden directory
+mkdir -p dir1/dir2/dir3 ##Used to create multiple directories. -p means parent
+cd dir1 ##Used to change directory
+cd .. ##Used to come out from the one directory level
+cd ../.. ##Used to come out from the two directories levels
+cd ##Will take you directly to the user home directory
+cp source destination ##Used to copy files
+cp -R source destination ##Used to copy directories. -R means recurssive, inside components will also copy
+mv source destination ##Used to move files and directories.
+mv oldname newname ##Used to rename files and directories.
+rm -rf name ##Used to delete files or directories. -rf means recurrsive and forcefully
+rm -rf /* ##It will delete all files and directory from root level
+tree ##It will show all the directory structure and to work this command tree package should be installed in the linux machine
+less filename ##It will show content of file by page by page and to come-out of file press q
+head filename ##It will show first 10 lines of the file
+head -n filename ##It will show first n lines of the file. n=1,2,3,....
+tail filename ##It will show bottom 10 lines of the file
+tail -n filename ##It will show bottom n lines of the file. n=1,2,3,....
+sort filename ##Used to rearrange the content of the file
+hostname ##it will show hostname of linux machine
+which packagename ##Displays whether package is installed or not
+yum list installed | grep git* ##Combination of two commands. Output of first command is the input of second command. | used to combine two commands and * means anything or all
+service packagename status ##To check status of the service
+service packagename start ##To start the service
+service packagename reload ##To reload the service
+service pacakagename stop ##To stop the service
+systemctl start httpd ##Another command to start the service
+systemctl status httpd ##To check status of the service
+systemctl stop httpd ##To stop the service
+systemctl reload httpd ##To reload the service
+chkconfig servicename on ##Everytime it will start the service when we login to linux machine
+find -type f ##It will display all files including hidden files. f means files
+find -type d ##It will display all directories including hidden dierctories. d means directory
+find / -type f ##It will display all files including hidden files in the linux machine
+find / -type d ##It will display all directories including hidden dierctories in the linux machine.
+find / -type f -name filename ##It will display path of the file
+find / -type d -name directoryname ##It will display path of the directories
+useradd username ##Used to add new user and by default it will add group with same name
+passwd username ##Used to add password to the user. Give enter it ask to enter password
+groupadd groupname ##Used add new group
+cat /etc/passwd ##Display all users
+cat /etc/group ##Display all groups
+gpasswd -a username groupname ##It will add user to group
+gpasswd -M user1,user2 groupname ##It will add multiple user to group
+ln -s path softlinkname ##It will create softlink and Softlink is like a shortcut
+ln path hardlinkname ##It will create hardlink file and Hardlink is like a backup
+tar -cvf tarfilename path ##It will create tar file. c means create, v means verbose[live output], f means forcefully
+tar -xvf tarfilename ##Used to extract the tar file. X means extract
+gzip filename ##Used to zip the file
+gunzip filename ##Used to unzip the file
+wget url ##To download software from websites
+r means read value is 4, w means write/edit/delete value is 2, x means execute value is 1
+chmod 777 directoryname ##Used to change permissions of directory, first digit indicates owner permissions, second digit indicates group permissions, third digit indicates other user permissions.
+chmod 777 -R directoryname ##Used to give permissions directory and inside files also
+chown username filename ##Used to change owner of file
+chgrp groupname directoryname ##Used to change group of directory
+clear #Used to clear the screen or ctrl + l
+sh file.sh or ./file.sh ##To run the .sh file
+ssh-keygen -t rsa ##Used to generate ssh keys and -t rsa means type of keys to create
+ssh -i /path_of_private_keys username@remote_instaance_ip
+scp -i /path_of_private_keys sourcefile username@remote_instaance_ip:/destination path
+cat /etc/passwd ##Used to check where ssh keys created
+curl -i -X GET url ##Used to check whether we aare getting response from URL
+netstat -a | grep 443 ##Used to check all active TCP and listening ports
+telnet hostname portnumber ##Used to test the connectvity to a remote server
+keytool -list -v -keystore identity_store.jks ##Displays the content of keystore file
+java -jar appname.jar ##Used to run thejar file manually
+
+top - ##Used to check the cpu utilization
+df -h ##Used to check disk space utilization
+free -m ##Used to check for memory

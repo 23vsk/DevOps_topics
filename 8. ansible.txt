@@ -1,0 +1,320 @@
+##Ansible installation
+yum install python -y
+yum install python-pip -y
+pip install ansible
+pip install --upgrade pip
+ansible --version
+
+##Creating user and password and giving sudo permissions
+useradd ansadmin
+passwd username
+visudo
+add line "ansadmin ALL=(ALL)  NOPASSWD:ALL ##We have to do this in all servers
+
+##We have to make connection between server and hosts. Initially connection will not be established
+##Modify /etc/ssh/sshd_config file and update passwordauthentication yes
+service sshd reload ##reload the service in all the servers
+
+##check ssh connection
+ssh ansadmin@IPAddress of host1
+
+##Passwordless SSH or Trust Relation
+ssh-copy-id ansadmin@hostname ##It copy keys to hosts
+
+##create hosts file in /etc/ansible/hosts. If file deleted from the server, again need to add and check ssh connection
+content:
+ip-172-31-7-182.ap-south-1.compute.internal
+
+[webservers]
+ip-172-31-7-182.ap-south-1.compute.internal
+
+##To avoide warnings create /etc/ansible/ansible.cfg
+Add 
+[defaults]
+"interpreter_python=auto_silent"
+
+ansible all --list-hosts ##Displays all nodes list
+ansible webservers --list-hosts ##Displays all hosts which are webserver group
+ansible webservers[0] --list-host ##Displays first hostname
+ansible webservers[-1] --list-host ##Displays last hostname
+ansible webservers[0:5] --list-host ##Displays first five hostname
+ansible webservers:dbservers --list-host ##Displays hostnames from different groups
+
+ansible all -m command -a "command" ##Basic ansible command ##all=all groups, -m=modules, -a=orbitary or actual task, command=command tool or module
+
+ansible all -m command -a "ls"
+ansible all -m command -a "ls -a"
+ansible all -m command -a "touch test"
+ansible webservers -m command -a "touch test2"
+ansible all  -a "sudo yum install tree -y" or ansible all  -a "yum install tree -y" -b ## -b=sudo
+
+##To create infrastructure command module is not recommanded and to install packages yum module is recommanded
+ansible all  -b -m yum -a "pkg=httpd state=present" ##present=install
+ansible all  -b -m yum -a "pkg=httpd state=latest" ##latest=update
+ansible all  -b -m yum -a "pkg=httpd state=absent" ##absent=uninstall
+
+ansible all  -b -m service -a "name=httpd state=started"
+ansible all  -b -m service -a "name=httpd state=stopped"
+
+ansible all  -b -m user -a "name=venkat state=present"
+ansible all  -b -m user -a "name=venkat state=absent"
+
+ansible all  -b -m command -a "tail -2 /etc/passwd"
+
+ansible all  -b -m copy -a "src=testfile dest=/temp"
+
+ansible all -m setup ##It will collect all the details from nodes
+
+Playbooks:
+
+ansible-playbook playbook.yml --check ##dry-run
+ansible-playbook playbook.yml ##command to run playbook
+ansible-playbook playbook.yml -b ##-b=sudo user access and will have high priority
+ansible-playbook playbook.yml -e "user3=c" ##-e or --extra-vars means extravariable
+
+##Creating user
+---
+- name: This playbook creates a user
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: creating a user sai
+    user: 
+       name:sai
+
+##Create file
+---
+- name: This playbook creates a file
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: creating a file
+    file:
+       path: /home/ansadmin
+       state: touch
+
+##Creating Directory
+---
+- name: This playbook creates a Directory
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: creating a Directory
+    file:
+       path: /home/ansadmin
+       state: directory
+
+##Deleting Directory
+---
+- name: This playbook deletes a Directory/file
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: deleting a Directory/file
+    file:
+       path: /home/ansadmin/test
+       state: absent
+
+##Copying a file
+---
+- name: This playbook copying a file
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: copying a file
+    copy:
+       src: /home/ansadmin/testfile
+       dest: /home/venkat/
+       mode: 0600
+       owner: sai
+
+##Installing package
+---
+- name: This playbook install package
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: installing package
+    yum:
+       name: git
+       state: installed ##present or latest
+
+##Installing multiple packages
+---
+- name: This playbook install multiple package
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: installing package
+    yum:
+       name: ['git', 'jenkins', 'tree']
+       state: installed ##present or latest
+
+##Performing Multiple Task
+---
+- name: This playbook install, start, stop and uninstall package
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: installing package
+    yum:
+       name: httpd
+       state: installed ##present or latest
+  - name: installing package
+    service:
+       name: httpd
+       state: started
+  - name: stopping package
+    service:
+       name: httpd
+       state: stopped
+  - name: uninstalling package
+    yum:
+       name: httpd
+       state: removed
+
+##Handlers
+---
+- name: This playbook install and start package by handlers
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: installing package
+    yum:
+       name: httpd
+       state: installed ##present or latest
+    notify: start service
+  handlers:
+  - name: start service
+    service:
+       name: httpd
+       state: started
+
+##When condition
+---
+- name: This playbook install package
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: installing package
+    yum:
+       name: httpd
+       state: installed ##present or latest
+    when: ansible_os_family == "RedHat"
+  - name: installing package
+    apt:
+       name: httpd
+       state: present ##present or latest
+    when: ansible_os_family == "Debian"
+
+##Multiple users
+---
+- name: This playbook creates a user
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: creating a users
+    user:
+      name: "{{item}}"
+      state: present
+    with_items:
+       - raj
+       - hari
+
+##creating user using vars
+---
+- name: This playbook creates a user
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  vars:
+     user: kumar
+  tasks:
+  - name: creating a users
+    user:
+      name: "{{user}}"
+
+##Create user.yml file
+user1: a
+user2: b
+
+##creating user using vars file
+---
+- name: This playbook creates a user
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  vars_files:
+  - user.yml
+  tasks:
+  - name: creating a "{{user1}}"
+    user:
+      name: "{{user1}}"
+  - name: creating a "{{user2}}"
+    user:
+      name: "{{user2}}"
+
+##downloading service from url
+---
+- name: This playbook used download service from url
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: Downloading tomcat
+    get_url:
+       url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.96/src/apache-tomcat-9.0.96-src.tar.gz
+       dest: /home/ansadmin/
+
+##Unarchiving tar file
+---
+- name: This playbook used unarchive tar file
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: unarchiving tar file
+    unarchive:
+       src: /home/ansadmin/apache-tomcat-9.0.96-src.tar.gz
+       dest: /home/ansadmin/
+       remote_src: yes
+
+##To give permissions to files
+---
+- name: This playbook permissions to a file
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: permissions to a file
+    file:
+       path: /home/ansadmin/testfile
+       owner: ansadmin
+       group: ansadmin
+       mode: 0775
+
+##To execute .sh file
+---
+- name: This playbook to run .sh file
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: to run a .sh file
+    shell: nohup ./test.sh
+    args:
+       chdir: /home/ansadmin/
+
+##Error Handling
+---
+- name: This playbook install package
+  hosts: all ##Host selection
+  become: yes ##It means execute using sudo access
+  tasks:
+  - name: installing package
+    yum:
+       name: httpd--- ##error
+       state: installed ##present or latest
+    when: ansible_os_family == "RedHat"
+    ignore_errors: yes
+
+##Ansible vault
+ansible-vault create vaulttest.yml ##creates encrypt playbook
+ansible-vault view vaulttest.yml ##view encrypt playbook
+ansible-vault edit vaulttest.yml ##edit encrypt playbook
+ansible-vault rekey vaulttest.yml ##to change password
+ansible-vault decrypt vaulttest.yml ##to decrypt or no need of password
