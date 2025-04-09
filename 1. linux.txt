@@ -1,3 +1,16 @@
+Server means which servers other machines or having high configurations.
+Unix is free and open to the world. Unix has flavours are Linux, aux, HP-UX, IOS, Solaris. Linux has flavors RHEL, Centos, Amazon Linux, Ubuntu etc.
+Linux is very light weight and open source. It is highly secure and virus free. It can do multi-user and multi-tasking.
+
+File system:
+root - house for root user
+home - house for other users
+boot - bootable files will be loaded
+etc - contains all configuration files
+usr - contains packages of software
+bin - It contains commands
+sbin or secure bin - It contains commands only run by root user
+
 top - ##Used to check the cpu utilization
 df -h ##Used to check disk space utilization
 free -m ##Used to check for memory
@@ -90,7 +103,3 @@ netstat -a | grep 443 ##Used to check all active TCP and listening ports
 telnet hostname portnumber ##Used to test the connectvity to a remote server
 keytool -list -v -keystore identity_store.jks ##Displays the content of keystore file
 java -jar appname.jar ##Used to run thejar file manually
-
-top - ##Used to check the cpu utilization
-df -h ##Used to check disk space utilization
-free -m ##Used to check for memory

@@ -1,3 +1,8 @@
+Container is like a virtual machine
+Docker is a tool to create those VMs called as containers
+Docker is a tool that perform operations-system-level virtualization also knon as "Containerization"
+OS-level virtualiation: Docker images are created with 5% OS and it depends onbase machine OS of unix.
+
 ##Docker installation
 yum install docker -y
 docker --version
@@ -6,6 +11,7 @@ service docker status
 chkconfig docker on
 
 ##Docker commands
+
 docker images ##Displays list of images
 docker ps ##Displays containers or process
 docker ps -a ##Displays all containers or process including stopped
@@ -26,17 +32,17 @@ docker stop $(docker ps -a -q) ##Used to stop all the containers. -q stands for 
 docker rm $(docker ps -a -q) ##Used to delete all the containers
 docker rmi $(docker images -a -q) ##Used to delete all the images
 docker logs -f containername ##Displays logs of container
-
+docker cp <source_container>:/path/to/source/file /tmp/ ##Used to copy files
 
 docker run -it ubuntu /bin/bash ##run= to create container, it=image command, i means interactive and t means terminal. It will pull image from Docker hub and copy of that it will create image. After running command it will login cotainer with root user.
 exit ##Used to exit from the container and it will stop the container
 docker run -it --name containername ubuntu /bin/bash ##To name container while initialzing
 docker run -it --name containername imagename /bin/bash ##Creates container from a specified image name
 
-
 ##Creating container using Dockerfile
 ##Create a docker file with name Dockerfile
 ##Instructions
+
 FROM ubuntu --> To define OS
 RUN echo "test" > /tmp/testfile --> To run the linux command
 WORKDIR /tmp --> when you login to container bydefault we will be in the that directory
@@ -45,6 +51,7 @@ COPY filename destpath --> copy file from base location to container
 ADD filename destpath --> Similar to COPY but here we can copy multiple files. We can copy tar.gz file and it will extract the file. And also It will Copy files from URL.
 
 ##Example Dockerfile
+
 FROM ubuntu
 RUN echo "test" > /tmp/testfile
 WORKDIR /tmp
@@ -56,39 +63,42 @@ docker build -t imagename dockerfilepath ##It will build the dockerfile and crea
 docker build -t imagename . ##It will build the dockerfile from current directory and creates a docker image.
 docker build -t imagename . -f saifile ##Used to build image by using dockerfile which having some other name.
 
-
 ##Docker volume
 ##Declare directory as a owner/volume
 ##Volumes works like a hard-link
+
 docker volume create volumename
 docker volume ls ##Displays volumes
 docker inspect containername ##Dispalys the volume details under mount section.
 
 ##Container to Container
+
 docker run -it --name cont2 --privileged=true --volumes-from cont1 ubuntu /bin/bash ##creates a container with name cont2 from ubuntu image and volumes from cont1, --privileged=true means it getting all permissions from cont1, --volumes-from cont1 means getting volumes from cont1
 docker run -it --name cont4 --privileged=true -v /volumename ubuntu /bin/bash ##-v is a volumes tag
 
 ##Host to container
-docker run -it --name cont5 -v /hostvolumename:/contvolumename --privileged=true ubuntu /bin/bash ##/hostvolumename takes from base machine, /contvolumename creates directory in cont5, : means mapping, -v means volumes tag
 
+docker run -it --name cont5 -v /hostvolumename:/contvolumename --privileged=true ubuntu /bin/bash ##/hostvolumename takes from base machine, /contvolumename creates directory in cont5, : means mapping, -v means volumes tag
 
 ##Port mapping
 ##Here container will not created in intereactive mode. It will be created in detach mode
+
 docker run -td --name containername -p basemachineport:containerport ubuntu /bin/bash ##-td means detach mode and it will run continuosly when we exit from container also, -p port mapping
 docker exec -it contname /bin/bash ##Used to enter into the container in detach mode
 docker port contname ##Displays port mapping
 
-
 ##Sharing our own image to public
+
 docker login ##Login to dockerhub
 docker tag imagename path ##Used to give tag name to a image
 docker push path ##used to push the image to a path or folder
 docker pull path ##Used to pull a image from the dockerhub
 
-
-##Docker Compose - used to manage multiple containers which are in same machine. Docker Compose is designed to manage containers on a single server (host).
+##Docker Compose - used to manage multiple containers which are in same machine. 
+Docker Compose is designed to manage containers on a single server (host).
 
 ##To install docker-compose
+
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 docker-compose --version
@@ -101,7 +111,6 @@ docker-compose rm ##used to delete the container
 docker-compose build ##Used to build the container
 docker-compose exec name /bin/bash ##To enter into the container
 docker-compose up-d-scale one=2 ##To increase the instances
-
 
 ##docker-compose.yml
 version: '3.8'
@@ -164,8 +173,8 @@ def hello_world():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 
-
-##Docker swarm: Docker Swarm is a container orchestration tool that allows you to manage multiple Docker containers across multiple hosts in a cluster. It enables high availability, load balancing, and scaling of containerized applications efficiently. Default port for swarm is 2377
+##Docker swarm: Docker Swarm is a container orchestration tool that allows you to manage multiple Docker containers across multiple hosts in a cluster. 
+It enables high availability, load balancing, and scaling of containerized applications efficiently. Default port for swarm is 2377
 
 docker swarm init ##Used to initialize docker swarm
 doker node ls ##Displays list of nodes

@@ -38,7 +38,7 @@ kubectl apply -f pod.yml ##To create or restart pod
 kubectl get pods ##Displays the pods
 kubectl get pods -o wide ##Displays all details of pods
 kubectl get ing ##Displays the details of Ingress
-kubectl exec -it podname -- /bin/bash ##Used to login login to pod
+kubectl exec -it podname -- /bin/bash ##Used to login to pod
 kubectl logs podname ##Displays logs
 kubectl describe pod poadname ##Displays all the information of the pod
 kubectl delete deploy name ##Used to delete deployment/Pods
