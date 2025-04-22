@@ -1,6 +1,6 @@
 Source code management, It is a storage where we store our source code. We can add, modify and delete our code.
 
-User will write the code in the local machine then he will push that code to stagging. 
+User will write the code in the local machine then he will add that code to stagging. 
 Then he will commit code to local repo and push the code into central repo.
 
 Workspace - Physically see file and modify
@@ -12,7 +12,7 @@ git config --global user.name "venkat" ##Used to set-up user name
 git config --global user.email "venkat@gmail.com" ##Used to set-up email
 git config --list #Displays the username and email id
 git init ##Git will initialize. It will create hidden folder .git
-git clone githuburl -b branch name ##Used to clone from Github
+git clone githuburl -b branchname ##Used to clone from Github
 git remote add origin githuburl ##It will connect local to remote repo and origin is shortcut name for central repo
 git remote remove origin ##It will disconnect local to remote repo 
 git pull origin branchname ##Used to pull code from Main branch
@@ -26,7 +26,7 @@ git push origin main:branchname ##Pushing code from main to another branch
 git branch -m newbranchname ##Used to rename the branch
 git branch newname ##Create new branch from main
 git checkout branchname ##It will switch to new branch
-git log ##Displaays all commits or commit ids
+git log ##Displays all commits or commit ids
 git show idnumber ##Displays data inside commit id
 git remote -v ##Displays which central repository
 git branch ##Displays all branches
@@ -36,10 +36,14 @@ git log --grep "message" ##Displays which 'message' in commit message
 git reset ##Brings the changes back from stagging area to workspace
 git reset filename ##Brings the changes back
 git reset --hard ##Added file will be deleted permantly from workspace
-git fetch main ##Used to pull code from local repo to stagging area and Latest Changes Without Merging
+git fetch main ##Used to Pulls in changes from remote, but doesn’t apply them to your local branches
 git revert commitid ##It will do 3 actions 1. Delete file in workspace, 2. Delete file in stagging area, 3. It would not delete commit but add new commit
 git clean -n ##Used to delete untracked files -n means dry run, it will not delete file and it will give warning
 git clean -f ##Used to delete the untracked files
 git tag -a tagname -m "message" commitid ##Used to give tag for perticular commit Id
 git show tagname ##Displays deatails of tag
 git tag -d tagname ##Used to delete tag
+git stash -k ##Used to save your uncommitted changes temporarily without committing them. Stash unstaged changes only
+git stash -u ##Stash untracked files too
+git stash -a ##Stash everything (untracked + ignored)
+git rebase base-branch ##Helps keep your commit history clean and linear. Takes the commits from your current branch and "replays" them on top of base-branch

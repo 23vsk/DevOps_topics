@@ -1,6 +1,6 @@
 Container is like a virtual machine
 Docker is a tool to create those VMs called as containers
-Docker is a tool that perform operations-system-level virtualization also knon as "Containerization"
+Docker is a tool that perform operations-system-level virtualization also knoWn as "Containerization"
 OS-level virtualiation: Docker images are created with 5% OS and it depends onbase machine OS of unix.
 
 ##Docker installation
@@ -18,6 +18,12 @@ docker ps -a ##Displays all containers or process including stopped
 docker info ##Displays all details of docker
 docker search imagename ##Displays all the available images in the docker hub
 docker pull imagename ##Used to pull the image from docker and it will not initialize or start
+
+docker run -it ubuntu /bin/bash ##run= to create container, it=image command, i means interactive and t means terminal. It will pull image from Docker hub and copy of that it will create image. After running command it will login cotainer with root user.
+exit ##Used to exit from the container and it will stop the container
+docker run -it --name containername ubuntu /bin/bash ##To name container while initialzing
+docker run -it --name containername imagename /bin/bash ##Creates container from a specified image name
+
 docker start containerid ##Used to start the container
 docker rename currentname newname ##Used to rename the container
 docker attach containername ##Used to connect your container[Login] and initial the container should be up.
@@ -34,11 +40,6 @@ docker rmi $(docker images -a -q) ##Used to delete all the images
 docker logs -f containername ##Displays logs of container
 docker cp <source_container>:/path/to/source/file /tmp/ ##Used to copy files
 
-docker run -it ubuntu /bin/bash ##run= to create container, it=image command, i means interactive and t means terminal. It will pull image from Docker hub and copy of that it will create image. After running command it will login cotainer with root user.
-exit ##Used to exit from the container and it will stop the container
-docker run -it --name containername ubuntu /bin/bash ##To name container while initialzing
-docker run -it --name containername imagename /bin/bash ##Creates container from a specified image name
-
 ##Creating container using Dockerfile
 ##Create a docker file with name Dockerfile
 ##Instructions
@@ -48,7 +49,11 @@ RUN echo "test" > /tmp/testfile --> To run the linux command
 WORKDIR /tmp --> when you login to container bydefault we will be in the that directory
 ENV key value --> To define environmental variables
 COPY filename destpath --> copy file from base location to container
-ADD filename destpath --> Similar to COPY but here we can copy multiple files. We can copy tar.gz file and it will extract the file. And also It will Copy files from URL.
+ADD filename destpath --> Similar to COPY but here we can copy multiple files. We can copy files from URL and also copy tar.gz file and it will extract the file. 
+CMD command param1 param2 --> The CMD instruction specifies default arguments or commands that can be overridden when the container is started.
+ENTRYPOINT command param1 param2 --> The ENTRYPOINT instruction defines the fixed executable that will always run when the container starts.
+VOLUME /data --> Used to enable access from the container to a host directory
+EXPOSE <port> [<port>/<protocol>...] --> The EXPOSE instruction documents which port(s) a container will listen on at runtime.
 
 ##Example Dockerfile
 
@@ -63,17 +68,20 @@ docker build -t imagename dockerfilepath ##It will build the dockerfile and crea
 docker build -t imagename . ##It will build the dockerfile from current directory and creates a docker image.
 docker build -t imagename . -f saifile ##Used to build image by using dockerfile which having some other name.
 
-##Docker volume
+##Docker volume: To make data permanent and container can able access the data, we use the volumes. 
+##Default path for volumes is '/var/lib/docker/volume'.
 ##Declare directory as a owner/volume
 ##Volumes works like a hard-link
 
-docker volume create volumename
+docker volume create volumename ##Creates the volume
 docker volume ls ##Displays volumes
 docker inspect containername ##Dispalys the volume details under mount section.
+docker run -it --name cont1 --mount source=path destination=path ubuntu /bin/bash ##To mount the volume to a container
 
 ##Container to Container
 
 docker run -it --name cont2 --privileged=true --volumes-from cont1 ubuntu /bin/bash ##creates a container with name cont2 from ubuntu image and volumes from cont1, --privileged=true means it getting all permissions from cont1, --volumes-from cont1 means getting volumes from cont1
+or
 docker run -it --name cont4 --privileged=true -v /volumename ubuntu /bin/bash ##-v is a volumes tag
 
 ##Host to container

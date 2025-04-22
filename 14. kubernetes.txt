@@ -1,3 +1,15 @@
+## What is kubernetes?
+> - Kubernetes is an open-source container orchestration platform that automates the deployment, scaling, and management of containerized applications.
+> - (often abbreviated as K8s - The abbreviation K8s comes from: Kubernetes has 10 characters between the first letter K and the last letter s.)
+
+> **Node**: In Kubernetes, a node is a worker machine in the cluster where workloads (i.e., Pods) are deployed and executed.
+
+> **Container**is a lightweight, portable, and self-sufficient unit that packages an application and its dependencies, allowing it to run consistently across different environments
+
+> **POD**: A Pod is the smallest and most basic deployable unit in Kubernetes. It represents a single instance of a running process in the cluster and serves as a wrapper for one or more containers.
+
+> **Cluster**: A Kubernetes cluster is a collection of machines (nodes) that work together to run, manage, and scale containerized applications.
+
 ##Reference
 https://github.com/iam-veeramalla/Kubernetes-Zero-to-Hero/blob/main/README.md
 ##K8s installation
@@ -49,6 +61,9 @@ curl ipaddress ##To access the application
 
 kubectl get svc -v=9 ##Displays all the traffic of pod
 kubectl edit svc servicename ##To edit the service
+kubectl expose deployment myapp --type=LoadBalancer --port=80 --target-port=8080  
+##used to create a Kubernetes Service that exposes a pod, deployment, replica set, or other resources to network access 
+— either internally inside the cluster or externally outside the cluster.
 
 kubectl create secret generic test-secret --from-literal=db-port="3306" ##Used to create secret
 
@@ -110,7 +125,7 @@ spec:
               number: 80
 
 ## service.yml
-## ClusterIP
+## ClusterIP: Default service type for internal communication
 
 apiVersion: v1
 kind: Service
